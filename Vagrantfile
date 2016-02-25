@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "neutron" do |host|
     host.vm.hostname = "neutron"
-    #host.vm.network "private_network", ip: "192.168.33.50"
+    host.vm.network "private_network", ip: "192.168.33.50"
     host.vm.provision :shell, :path => "provision.sh"
   end
   

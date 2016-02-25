@@ -8,6 +8,9 @@ systemctl start openvswitch
 systemctl status openvswitch
 ovs-vsctl show
 
+## start firewalld
+systemctl start firewalld
+
 ## Network Namespaceの作成
 # ip netns add qrouter1
 ## veth pearの作成
@@ -41,3 +44,27 @@ ovs-vsctl show
 
 # check network
 # ip netns exec qvm1 ping 10.0.0.1
+
+
+
+
+
+# ip link add qg-veth1 type veth peer name qg-peer1
+# ip link set qg-veth1 netns qrouter1
+# ovs-vsctl add-br br-ex
+# ovs-vsctl add-port br-ex qg-peer1
+# ip netns exec qrouter1 sysctl net.ipv4.ip_forward=1
+
+# ip netns exec qrouter1 ip addr add 10.0.2.20/24 dev qg-veth1
+# ip netns exec qrouter1 ip addr add 10.0.2.21/24 dev qg-veth1
+# ip link set qg-peer1 up
+# ip netns exec qrouter1 iptables -t nat -A POSTROUTING -s 10.0.0.3 -j SNAT --to 10.0.2.21
+# ip netns exec qrouter1 iptables -t nat -A PREROUTING -d 10.0.2.21 -j DNAT --to 10.0.0.3
+# ip netns exec qrouter1 iptables -t nat -nL
+
+# ip netns exec qvm1 ip route add default via 10.0.0.1 dev vm-veth1
+# ip netns exec qvm1 route add default gw 10.0.0.1
+# ovs-vsctl add-port br-ex eth0
+
+
+
