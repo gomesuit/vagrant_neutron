@@ -12,6 +12,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
+    #vb.customize ['modifyvm', :id, '--nictype1', 'Am79C973']
+    vb.customize ['modifyvm', :id, '--nicpromisc1', 'allow-all']
   end
 
   config.vm.define "neutron" do |host|

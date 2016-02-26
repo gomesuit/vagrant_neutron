@@ -61,7 +61,9 @@ ovs-vsctl show
 # ip netns exec qrouter1 iptables -t nat -A PREROUTING -d 10.0.2.21 -j DNAT --to 10.0.0.3
 # ip netns exec qrouter1 iptables -t nat -nL
 
+# ip netns exec qvm1 ip route delete default
 # ip netns exec qvm1 ip route add default via 10.0.0.1 dev vm-veth1
+## ip netns exec qvm1 ip route add default via 10.0.0.1
 # ovs-vsctl add-port br-ex eth0
 
 
